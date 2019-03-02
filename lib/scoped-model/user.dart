@@ -3,7 +3,7 @@ import 'package:aacx/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 mixin UserModel on Model{
 
   User authenticatedUser;
@@ -22,6 +22,9 @@ mixin UserModel on Model{
     print(responseData);
     authenticatedUser =
     new User(id:responseData["localId"] , email: email, password: password);
+    Firestore.instance.collection("/users").add({"id":responseData["localId"] , "email": email, "password": password}).then((onValue){
+      print(onValue.documentID);
+    });
     print((responseData));
     bool hasError = true;
     String message = "something went wrong";
